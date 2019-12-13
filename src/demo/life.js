@@ -1,6 +1,6 @@
 import React ,{ Component } from 'react';
 import Child from './child'
-import './child.css'
+import './child.less'
 
 class life extends Component {
     constructor(props) {
