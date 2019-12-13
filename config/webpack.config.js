@@ -119,20 +119,37 @@ module.exports = function(webpackEnv) {
       },
     ].filter(Boolean);
     if (preProcessor) {
-      loaders.push(
-        {
-          loader: require.resolve('resolve-url-loader'),
-          options: {
-            sourceMap: isEnvProduction && shouldUseSourceMap,
-          },
-        },
-        {
+      if(preProcessor === 'less-loader'){
+        loaders.push({
           loader: require.resolve(preProcessor),
           options: {
-            sourceMap: true,
+            sourceMap: isEnvProduction && shouldUseSourceMap,
+            modules: false,
+            modifyVars: {
+              "@primary-color": "orange",
+//               'link-color': '#1DA57A',
+//               'border-radius-base': '2px',
+//               '@fill-body': '#54cc85'
+            },
+            javascriptEnabled: true,
           },
-        }
-      );
+        });
+      }else{
+        loaders.push(
+          {
+            loader: require.resolve('resolve-url-loader'),
+            options: {
+              sourceMap: isEnvProduction && shouldUseSourceMap,
+            },
+          },
+          {
+            loader: require.resolve(preProcessor),
+            options: {
+              sourceMap: true,
+            },
+          }
+        )
+      }
     }
     return loaders;
   };
@@ -418,6 +435,7 @@ module.exports = function(webpackEnv) {
                       },
                     },
                   ],
+                  ['import',{libraryName:'antd',style:true}]
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
