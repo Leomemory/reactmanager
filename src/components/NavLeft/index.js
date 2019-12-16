@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import MenuConfig from '../../config/menuConfig'
 import { Menu } from 'antd';
 import './index.less'
-const { SubMenu } = Menu;
+const SubMenu = Menu.SubMenu;
 
 class NavLeft extends Component {
     constructor(props) {
@@ -29,7 +29,7 @@ class NavLeft extends Component {
                 )
             }
             return <Menu.Item title={item.title} key={item.key}>
-                <Link to={item.key}>{item.title}</Link>
+                <NavLink to={item.key}>{item.title}</NavLink>
             </Menu.Item>
         })
     }
@@ -41,11 +41,9 @@ class NavLeft extends Component {
                     <img src="" alt="" />
                     <h1>manager MS</h1>
                 </div>
-                <Router>
                 <Menu theme="dark">
                     { this.state.menuTreeNode }
                 </Menu>
-                </Router>
             </div>
         );
     }
