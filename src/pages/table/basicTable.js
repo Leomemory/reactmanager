@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Card, Table, Modal, Button, message} from 'antd';
 // import axios from 'axios';
 import axios from '../../axios/index'
+import utils from './../../utils/utils';
 
 class basicTable extends Component {
     constructor(props) {
@@ -9,6 +10,9 @@ class basicTable extends Component {
         this.state = {  
             dataSource2:[]
         }
+    }
+    params = {
+        page:1
     }
 
     componentDidMount(){
@@ -65,22 +69,64 @@ class basicTable extends Component {
         //     }
         // })
 
+        let _this = this;
         axios.ajax({
             url:'/table/list',
             data:{
                 params:{
-                    page: 1
+                    page: this.params.page
                 }
             }
         }).then((res)=>{
             console.log(res)
             if(res.code === 0){
+                res.result.list.map((item, index) => {
+                    return item.key = index;
+                })
                 this.setState({
-                    dataSource2: res.result
+                    dataSource2: res.result.list,
+                    //下面两条为请求完页面,清空数组
+                    selectedRowKeys:[],
+                    selectedRows: null,
+                    //引入pagination
+                    pagination:utils.pagination(res,(current)=>{   //mock数据分页点击页码不会变，换成线上接口会解决
+                        _this.params.page = current;
+                        this.request();
+                    })
                 })
             }
         })
     }
+
+    onRowClick = (record, index)=>{
+        // console.log(record, index)
+        let selectKey = [index];
+        this.setState({
+            selectedRowKeys:selectKey,
+            selectedItem: record
+        })
+        Modal.info({
+            title:'信息',
+            content:`用户名：${record.userName},用户爱好：${record.interest}`
+        })
+    }
+
+    // 多选执行删除动作
+    handleDelete = (()=>{
+        let rows = this.state.selectedRows;
+        let ids = [];
+        rows.map((item)=>{
+            ids.push(item.id)
+        })
+        Modal.confirm({
+            title:'删除提示',
+            content: `您确定要删除这些数据吗？${ids.join(',')}`,
+            onOk:()=>{
+                message.success('删除成功');
+                this.request();
+            }
+        })
+    })
 
     render() { 
         const columns = [
@@ -151,6 +197,27 @@ class basicTable extends Component {
                 dataIndex: 'time'
             }
         ]
+
+        //单选
+        const selectedRowKeys = this.state.selectedRowKeys;
+        const rowSelection = {
+            type:'radio',
+            selectedRowKeys    //点击行前面按钮显示选中
+        }
+
+        //多选
+        const rowCheckSelection = {
+            type: 'checkbox',
+            selectedRowKeys,
+            onChange:(selectedRowKeys,selectedRows)=>{
+                // console.log(selectedRowKeys, selectedRows);   // 行index及 行信息
+                this.setState({
+                    selectedRowKeys,
+                    selectedRows
+                })
+            }
+        }
+
         return (  
             <div>
                 <Card title="基础表格">
@@ -165,10 +232,48 @@ class basicTable extends Component {
                 <Card title="动态数据渲染表格-Mock" style={{margin:'10px 0'}}>
                     <Table
                         bordered
-                        rowKey={record => record.id}
                         columns={columns}
                         dataSource={this.state.dataSource2}
                         pagination={false}
+                    />
+                </Card>
+
+                <Card title="Mock-单选" style={{ margin: '10px 0' }}>
+                    <Table
+                        bordered
+                        rowSelection={rowSelection}
+                        onRow={(record,index) => {
+                            return {
+                              onClick: ()=>{
+                                  this.onRowClick(record, index)
+                              } // 点击行
+                            };
+                          }}
+                        columns={columns}
+                        dataSource={this.state.dataSource2}
+                        pagination={false}
+                    />
+                </Card>
+
+                <Card title="Mock-多选" style={{ margin: '10px 0' }}>
+                    <div style={{marginBottom:10}}>
+                        <Button onClick={this.handleDelete}>删除</Button>
+                    </div>
+                    <Table
+                        bordered
+                        rowSelection={rowCheckSelection}
+                        columns={columns}
+                        dataSource={this.state.dataSource2}
+                        pagination={false}
+                    />
+                </Card>
+
+                <Card title="Mock-表格分页" style={{ margin: '10px 0' }}>
+                    <Table
+                        bordered
+                        columns={columns}
+                        dataSource={this.state.dataSource2}
+                        pagination={this.state.pagination}
                     />
                 </Card>
             </div>
