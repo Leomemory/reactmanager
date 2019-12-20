@@ -4,9 +4,6 @@ import App from './App'
 import Login from './pages/login'
 import Admin from './admin'
 
-// import Common from './common'
-// import OrderDetail from './pages/order/detail'
-
 import Home from './pages/home'
 import Buttons from './pages/ui/buttons'
 import Modals from './pages/ui/modals'
@@ -25,7 +22,12 @@ import HighTable from './pages/table/highTable'
 
 import City from './pages/city/index'
 
-// import Order from './pages/order/index'
+import Order from './pages/order/index'
+
+import Common from './common'
+import OrderDetail from './pages/order/detail'
+
+
 // import User from './pages/user'
 // import BikeMap from './pages/map/bikeMap'
 // import Bar from './pages/echarts/bar'
@@ -48,6 +50,12 @@ class IRouter extends Component {
                     <Switch>
                         <Route path="/login" component={Login}/>
 
+                        <Route path="/common" render={() => 
+                            <Common>
+                                <Route path="/common/order/detail/:orderId" component={OrderDetail} />
+                            </Common> 
+                        }/> 
+
                         <Route path="/admin" render={()=>
                             <Admin>
                                 <Route path="/admin/home" component={Home} />
@@ -64,6 +72,7 @@ class IRouter extends Component {
                                 <Route path="/admin/table/basic" component={BasicTable} />
                                 <Route path="/admin/table/high" component={HighTable} />
                                 <Route path="/admin/city" component={City} />
+                                <Route path="/admin/order" component={Order} />
                                 <Route component={NoMatch} />
                                 {/* <Switch>
                                     <Route path="/home" component={Home} />
