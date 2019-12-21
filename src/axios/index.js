@@ -1,6 +1,7 @@
 import JsonP from 'jsonp'
 import axios from 'axios'
 import { Modal } from 'antd'
+import utils from './../utils/utils'
 
 export default class Axios {
     /* 封装jsonp,用于头部header组件获取天气API */
@@ -25,7 +26,12 @@ export default class Axios {
             loading = document.getElementById('ajaxLoading');
             loading.style.display = 'block';
         }
-        let baseAPI = 'https://www.fastmock.site/mock/ce29bb83c963fa87cee6e5a43b893368/rest';
+        let baseAPI = '';
+        if(options.isMock){
+            baseAPI = 'https://www.fastmock.site/mock/ce29bb83c963fa87cee6e5a43b893368/rest';
+        }else{
+            baseAPI = 'https://www.fastmock.site/mock/ce29bb83c963fa87cee6e5a43b893368/rest';
+        }
         return new Promise((resolve,reject)=>{
             axios({
                 url: options.url,
@@ -53,5 +59,30 @@ export default class Axios {
                 }
             })
         })
+    }
+
+    static requestList(_this,url,params,isMock){
+        var data = {
+            params: params,
+            isMock
+        }
+        this.ajax({
+            url,
+            data
+        }).then((data)=>{
+            if (data && data.result){
+                let list = data.result.item_list.map((item, index) => {
+                    item.key = index;
+                    return item;
+                });
+                _this.setState({
+                    list,
+                    pagination: utils.pagination(data, (current) => {
+                        _this.params.page = current;
+                        _this.requestList();
+                    })
+                })
+            }
+        });
     }
 }
