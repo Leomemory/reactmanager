@@ -89,6 +89,15 @@ class FilterForm extends Component {
                         }
                     </FormItem>;
                     formItemList.push(end_time)
+                }else if(item.type == 'DATE'){
+                    const DATEPICKER = <FormItem label={label} key={field}>
+                          {
+                               getFieldDecorator([field])(
+                                   <DatePicker showTime={true} placeholder={placeholder} format="YYYY-MM-DD HH:mm:ss"/>
+                               )
+                          }
+                    </FormItem>;
+                    formItemList.push(DATEPICKER);
                 }
             })
         }

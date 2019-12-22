@@ -35,6 +35,7 @@ export default {
         return options;
     },
 
+    //添加ETable行点击通用函数,{*选中行的索引} selectedRowKeys, {*选中行对象} selectedItem
     updateSelectedItem(selectedRowKeys, selectedItem){    
         this.setState({
             selectedRowKeys,
