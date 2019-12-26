@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { Row, Col } from 'antd';
 import Util from '../../utils/utils'
 import './index.less'
-import axios from '../../axios/index'
+// import axios from '../../axios/index'
 
 class Header extends Component {
     constructor(props) {
@@ -22,23 +22,23 @@ class Header extends Component {
             })
         },1000)
 
-        this.getWeatherAPIData()
+        // this.getWeatherAPIData()
     }
 
-    getWeatherAPIData(){
-        let city = '上海';
-        axios.jsonp({
-            url:'http://api.map.baidu.com/telematics/v3/weather?location='+encodeURIComponent(city)+'&output=json&ak=3p49MVra6urFRGOT9s8UBWr2'
-        }).then(res=>{
-            if(res.status === 'success'){
-                let data = res.results[0].weather_data[0];
-                this.setState({
-                    dayPictureUrl:data.dayPictureUrl,
-                    weather:data.weather
-                })
-            }
-        })
-    }
+    // getWeatherAPIData(){
+    //     let city = '上海';
+    //     axios.jsonp({
+    //         url:'http://api.map.baidu.com/telematics/v3/weather?location='+encodeURIComponent(city)+'&output=json&ak=3p49MVra6urFRGOT9s8UBWr2'
+    //     }).then(res=>{
+    //         if(res.status === 'success'){
+    //             let data = res.results[0].weather_data[0];
+    //             this.setState({
+    //                 dayPictureUrl:data.dayPictureUrl,
+    //                 weather:data.weather
+    //             })
+    //         }
+    //     })
+    // }
 
     render() { 
         const menuType = this.props.menuType;

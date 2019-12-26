@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter as Router,Route,Switch } from 'react-router-dom'
+import { HashRouter as Router,Route,Switch,Redirect } from 'react-router-dom'
 import App from './App'
 import Login from './pages/login'
 import Admin from './admin'
@@ -29,12 +29,15 @@ import OrderDetail from './pages/order/detail'
 
 import User from './pages/user'
 
-// import BikeMap from './pages/map/bikeMap'
-// import Bar from './pages/echarts/bar'
-// import Pie from './pages/echarts/pie'
-// import Line from './pages/echarts/line'
-// import RichText from './pages/rich'
-// import Permission from './pages/permission'
+import BikeMap from './pages/map/bikeMap'
+
+import Bar from './pages/echarts/bar'
+import Pie from './pages/echarts/pie'
+import Line from './pages/echarts/line'
+
+import RichText from './pages/rich'
+
+import Permission from './pages/permission'
 
 import NoMatch from './pages/nomatch'
 
@@ -47,6 +50,7 @@ class IRouter extends Component {
         return (  
             <Router>
                 <App>
+                    {/* 添加switch使下面三个同级路由只渲染一个 */}
                     <Switch>
                         <Route path="/login" component={Login}/>
 
@@ -56,26 +60,9 @@ class IRouter extends Component {
                             </Common> 
                         }/> 
 
-                        <Route path="/admin" render={()=>
+                        <Route path="/" render={()=>
                             <Admin>
-                                <Route path="/admin/home" component={Home} />
-                                <Route path="/admin/ui/buttons" component={Buttons} />
-                                <Route path="/admin/ui/modals" component={Modals} />
-                                <Route path="/admin/ui/loadings" component={Loadings} />
-                                <Route path="/admin/ui/notification" component={Notice} />
-                                <Route path="/admin/ui/messages" component={Messages} />
-                                <Route path="/admin/ui/tabs" component={Tabs} />
-                                <Route path="/admin/ui/gallery" component={Gallery} />
-                                <Route path="/admin/ui/carousel" component={Carousel} />
-                                <Route path="/admin/form/login" component={FormLogin} />
-                                <Route path="/admin/form/reg" component={FormRegister} />
-                                <Route path="/admin/table/basic" component={BasicTable} />
-                                <Route path="/admin/table/high" component={HighTable} />
-                                <Route path="/admin/city" component={City} />
-                                <Route path="/admin/order" component={Order} />
-                                <Route path="/admin/user" component={User} />
-                                <Route component={NoMatch} />
-                                {/* <Switch>
+                                <Switch>
                                     <Route path="/home" component={Home} />
                                     <Route path="/ui/buttons" component={Buttons} />
                                     <Route path="/ui/modals" component={Modals} />
@@ -98,8 +85,9 @@ class IRouter extends Component {
                                     <Route path="/charts/line" component={Line} />
                                     <Route path="/rich" component={RichText} />
                                     <Route path="/permission" component={Permission} />
+                                    <Redirect to="/home" />
                                     <Route component={NoMatch} />
-                                </Switch> */}
+                                </Switch>
                             </Admin>
                         } />
                     </Switch>
