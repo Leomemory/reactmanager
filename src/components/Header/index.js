@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { Row, Col } from 'antd';
 import Util from '../../utils/utils'
 import './index.less'
-// import axios from '../../axios/index'
+import {connect} from 'react-redux'  //连接器
+import axios from '../../axios/index'
 
 class Header extends Component {
     constructor(props) {
@@ -12,7 +13,7 @@ class Header extends Component {
     }
     componentWillMount(){
         this.setState({
-            userName:'河畔一角'
+            userName:'leo'
         })
 
         setInterval(()=>{
@@ -22,23 +23,23 @@ class Header extends Component {
             })
         },1000)
 
-        // this.getWeatherAPIData()
+        this.getWeatherAPIData()
     }
 
-    // getWeatherAPIData(){
-    //     let city = '上海';
-    //     axios.jsonp({
-    //         url:'http://api.map.baidu.com/telematics/v3/weather?location='+encodeURIComponent(city)+'&output=json&ak=3p49MVra6urFRGOT9s8UBWr2'
-    //     }).then(res=>{
-    //         if(res.status === 'success'){
-    //             let data = res.results[0].weather_data[0];
-    //             this.setState({
-    //                 dayPictureUrl:data.dayPictureUrl,
-    //                 weather:data.weather
-    //             })
-    //         }
-    //     })
-    // }
+    getWeatherAPIData(){
+        let city = '上海';
+        axios.jsonp({
+            url:'http://api.map.baidu.com/telematics/v3/weather?location='+encodeURIComponent(city)+'&output=json&ak=3p49MVra6urFRGOT9s8UBWr2'
+        }).then(res=>{
+            if(res.status === 'success'){
+                let data = res.results[0].weather_data[0];
+                this.setState({
+                    dayPictureUrl:data.dayPictureUrl,
+                    weather:data.weather
+                })
+            }
+        })
+    }
 
     render() { 
         const menuType = this.props.menuType;
@@ -59,7 +60,7 @@ class Header extends Component {
                     {
                         menuType ? '' : <Row className="breadcrumb">
                             <Col span={4} className="breadcrumb-title">
-                                首页
+                                { this.props.menuName }
                             </Col>
                             <Col span={20} className="weather">
                                 <span className="date">{this.state.sysTime}</span>
@@ -78,4 +79,10 @@ class Header extends Component {
     }
 }
  
-export default Header;
+
+const mapStateToProps = state => {
+    return {
+        menuName: state.menuName
+    }
+}
+export default connect(mapStateToProps)(Header);
